@@ -1,18 +1,36 @@
-import React from 'react'
+import React, { useEffect } from 'react';
+import { connect } from "react-redux";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
+import { getDate } from "../actions";
 
-export default function DateForm({ 
+function DateForm({ 
   startDate, 
   handleChange, 
   disabled, 
   handleDisabled,
-  onFormSubmit
+  getDate
 }) {
   const currentDay = new Date().getDate();
   const currentMonth = (new Date().getMonth() > 9) ? (new Date().getMonth() + 1) : `0${new Date().getMonth() + 1}`;
   const currentYear = new Date().getFullYear();
-  const displayDate  = `Сегодня ${currentDay}.${currentMonth}.${currentYear}`
+  const currentDate  = `${currentDay}.${currentMonth}.${currentYear}`;
+
+  useEffect(() => {
+    getDate(currentDate);
+  }, []);
+
+  const onFormSubmit = (e) => {
+    if(e) e.preventDefault();
+    if(!startDate || startDate.length < 1) alert('Выберите дату');
+    
+    const chosenDay = startDate.getDate();
+    const chosenMonth = startDate.getMonth() > 9 ? (startDate.getMonth() + 1) : (`0${startDate.getMonth() + 1}`);
+    const chosenYear = startDate.getFullYear();
+    const chosenDate = `${chosenDay}.${chosenMonth}.${chosenYear}`;
+
+    getDate(chosenDate);
+  }
 
   return (
     <div className="container">
@@ -27,7 +45,7 @@ export default function DateForm({
           disabled={disabled}
           isClearable
       >
-          <div className="calendar-footer">{displayDate}</div>
+          <div className="calendar-footer">{`Сегодня ${currentDate}`}</div>
         </DatePicker>
       </form>
       <div>
@@ -37,3 +55,10 @@ export default function DateForm({
     </div>
   )
 }
+
+export default connect(
+  null,
+  { getDate }
+)(DateForm);
+
+export { DateForm };

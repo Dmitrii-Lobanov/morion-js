@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import '../App.scss';
 import DateForm from './DateForm';
+import ShowRedux from './ShowRedux';
 
 function App() {
   const [startDate, setStartDate] = useState(new Date());
@@ -27,7 +28,8 @@ function App() {
         handleChange={handleChange}
         handleDisabled={handleDisabled}
         onFormSubmit={onFormSubmit}
-    />
+      />
+      <ShowRedux />
     </div>
   );
 }
